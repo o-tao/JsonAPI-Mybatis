@@ -1,6 +1,5 @@
 package com.app.jsonapi.mapper;
 
-import com.app.jsonapi.dto.LoginDto;
 import com.app.jsonapi.dto.RoleDto;
 import com.app.jsonapi.dto.UserDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -13,8 +12,8 @@ import java.util.Map;
 public interface AuthMapper {
 
     @Select("select userNo, userNm from company.user where userEnable = 1 and userNm = #{userNm} and userPwd = #{userPwd} ")
-    public UserDto login(Map<String, String> loginDto);
+    UserDto login(Map<String, String> loginDto);
 
     @Select("select roleNm from company.user_role as ur inner join role as r where ur.roleNo = r.roleNo and ur.userNo = #{userNo} ")
-    public List<RoleDto> roles(UserDto userDto);
+    List<RoleDto> roles(UserDto userDto);
 }
