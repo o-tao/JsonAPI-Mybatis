@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +19,7 @@ public class Token {
 
         JwtBuilder token = Jwts.builder()
                 .header().add(getHeader()).and()
+                .claims(setClaims())
                 .signWith(getSecretKey());
 
         log.info("Token : {}", token.compact());
@@ -34,5 +37,28 @@ public class Token {
     // signWith
     private SecretKey getSecretKey() {
         return Jwts.SIG.HS256.key().build();
+    }
+
+    // claims
+    private Map<String, Object> setClaims() {
+        Map<String, Object> claims = new HashMap<>();
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("name", "사용자");
+
+        claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
+        claims.put("subject", "user"); // 제목 또는 식별자
+        claims.put("audience", user); // 대상자 또는 사용자
+        claims.put("expiration", getDate(1)); // 만료 또는 종료시간
+        claims.put("issuedAt", Calendar.getInstance().getTime()); // 발급 또는 발행시간
+
+        return claims;
+    }
+
+    // ~분동안 유지할 수 있는 토큰
+    private Date getDate(int i) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, i);
+        return calendar.getTime();
     }
 }
