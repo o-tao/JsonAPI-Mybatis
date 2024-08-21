@@ -2,7 +2,11 @@ package com.app.jsonapi.util;
 
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.MacAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -15,12 +19,21 @@ import java.util.Map;
 @Component
 public class Token {
 
+    private final MacAlgorithm ALGORITHM = Jwts.SIG.HS256;
+
+    @Value("${access.auth.jwt}")
+    private String jwtSecretKey;
+
+    @Value("${access.auth.interval}")
+    private int interval;
+
+
     public String setToken() {
 
         JwtBuilder token = Jwts.builder()
                 .header().add(getHeader()).and()
                 .claims(setClaims())
-                .signWith(getSecretKey());
+                .signWith(getSecretKey(), ALGORITHM);
 
         log.info("Token : {}", token.compact());
         return token.compact();
@@ -36,7 +49,9 @@ public class Token {
 
     // signWith
     private SecretKey getSecretKey() {
-        return Jwts.SIG.HS256.key().build();
+//        return Jwts.SIG.HS256.key().build(); // 토큰 생성
+        return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(jwtSecretKey)); // 암호화 된 토큰 디코드
+//        return Keys.hmacShaKeyFor(jwtSecretKey.getBytes()); // 35자 생성한 토큰
     }
 
     // claims
