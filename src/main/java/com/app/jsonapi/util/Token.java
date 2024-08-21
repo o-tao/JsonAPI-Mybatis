@@ -64,16 +64,16 @@ public class Token {
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자
         claims.put("audience", user); // 대상자 또는 사용자
-        claims.put("expiration", getDate(1)); // 만료 또는 종료시간
+        claims.put("expiration", getDate()); // 만료 또는 종료시간
         claims.put("issuedAt", Calendar.getInstance().getTime()); // 발급 또는 발행시간
 
         return claims;
     }
 
     // ~분동안 유지할 수 있는 토큰
-    private Date getDate(int i) {
+    private Date getDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, i);
+        calendar.add(Calendar.MINUTE, interval);
         return calendar.getTime();
     }
 }
