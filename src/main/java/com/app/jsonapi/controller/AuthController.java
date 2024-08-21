@@ -6,7 +6,10 @@ import com.app.jsonapi.dto.UserDto;
 import com.app.jsonapi.mapper.AuthMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponsDto login(@RequestParam Map<String, String> loginDto) {
+        log.info("Login");
         ResponsDto responsDto = new ResponsDto();
         responsDto.setStatus(false);
 

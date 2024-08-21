@@ -5,7 +5,9 @@
     <title>HOME</title>
 </head>
 <body>
+<div sec:authorize="isAuthenticated()">
     <h1 sec:authentication="name">이름</h1>
     <h2 sec:authentication="authorities">권한</h2>
+</div>
 </body>
 </html>

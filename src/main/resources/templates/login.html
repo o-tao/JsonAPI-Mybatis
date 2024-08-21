@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>LOGIN</title>
+</head>
+<body>
+<form method="post" th:action="@{/login}">
+    <input name="userNm" type="text">
+    <br>
+    <input name="userPwd" type="password">
+    <br>
+    <button type="submit">로그인</button>
+</form>
+</body>
+</html>
