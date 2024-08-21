@@ -20,6 +20,9 @@ public class JsonController {
 
     @GetMapping("/token/{token}")
     public Claims token(@PathVariable("token") String tokenKey) {
-        return token.getToken(tokenKey);
+        if (token.isValidToken(tokenKey)) {
+            return token.getToken(tokenKey);
+        }
+        return null;
     }
 }

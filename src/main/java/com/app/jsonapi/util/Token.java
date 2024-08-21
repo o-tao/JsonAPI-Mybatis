@@ -1,8 +1,6 @@
 package com.app.jsonapi.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
@@ -34,6 +32,8 @@ public class Token {
         JwtBuilder token = Jwts.builder()
                 .header().add(getHeader()).and()
                 .claims(setClaims())
+                .expiration(getDate()) // 만료 또는 종료시간
+                .issuedAt(Calendar.getInstance().getTime()) // 발급 또는 발행시간
                 .signWith(getSecretKey(), ALGORITHM);
 
         log.info("Token : {}", token.compact());
@@ -65,8 +65,8 @@ public class Token {
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자
         claims.put("audience", user); // 대상자 또는 사용자
-        claims.put("expiration", getDate()); // 만료 또는 종료시간
-        claims.put("issuedAt", Calendar.getInstance().getTime()); // 발급 또는 발행시간
+//        claims.put("expiration", getDate());
+//        claims.put("issuedAt", Calendar.getInstance().getTime());
 
         return claims;
     }
@@ -86,5 +86,31 @@ public class Token {
                 .getPayload();
         log.info("Claims : {}", claims.get("audience"));
         return claims;
+    }
+
+    // 토큰 유효 여부 체크
+    public boolean isValidToken(String token) {
+        try {
+            if (token != null || !token.isEmpty()) {
+                Claims claims = getToken(token);
+                log.info("============================================");
+                log.info("|ExpireTime\t: {}|", claims.getExpiration());
+                log.info("|IIssuedTime\t: {}|", claims.getIssuedAt());
+                log.info("|RealTime\t\t: {}|", Calendar.getInstance().getTime());
+                log.info("============================================");
+                return true;
+            }
+        } catch (ExpiredJwtException exception) {
+            log.info("==============");
+            log.error("Token Expired");
+        } catch (JwtException exception) {
+            log.info("==============");
+            log.error("Token Tampered");
+        } catch (NullPointerException exception) {
+            log.info("==============");
+            log.error("Token is null");
+        }
+        log.info("==============");
+        return false;
     }
 }
