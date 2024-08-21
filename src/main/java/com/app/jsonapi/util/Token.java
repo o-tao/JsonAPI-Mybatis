@@ -1,5 +1,6 @@
 package com.app.jsonapi.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -75,5 +76,15 @@ public class Token {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, interval);
         return calendar.getTime();
+    }
+
+    public Claims getToken(String token) {
+        Claims claims = Jwts.parser()
+                .verifyWith(getSecretKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        log.info("Claims : {}", claims.get("audience"));
+        return claims;
     }
 }
