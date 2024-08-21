@@ -65,8 +65,6 @@ public class Token {
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자
         claims.put("audience", user); // 대상자 또는 사용자
-//        claims.put("expiration", getDate());
-//        claims.put("issuedAt", Calendar.getInstance().getTime());
 
         return claims;
     }
@@ -88,7 +86,7 @@ public class Token {
         return claims;
     }
 
-    // 토큰 유효 여부 체크
+    // 토큰 유효여부 체크
     public boolean isValidToken(String token) {
         try {
             if (token != null || !token.isEmpty()) {

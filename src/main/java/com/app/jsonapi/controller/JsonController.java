@@ -13,6 +13,11 @@ public class JsonController {
     @Autowired
     private Token token;
 
+    @GetMapping("/")
+    public String test() {
+        return "test";
+    }
+
     @GetMapping("/token")
     public String token() {
         return token.setToken();
