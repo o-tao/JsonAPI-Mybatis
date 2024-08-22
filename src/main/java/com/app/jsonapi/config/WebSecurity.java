@@ -6,12 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
@@ -41,7 +37,7 @@ public class WebSecurity {
             // 로그인 성공시 redirect (defaultSuccessUrl 보다 우선순위)
             login.successHandler((request, response, auth) -> {
                 log.info("User : {}", auth.getPrincipal());
-                response.sendRedirect("/admin");
+                response.sendRedirect("/");
             });
 
             // 로그인 오류시 redirect (failureUrl 보다 우선순위)
@@ -52,25 +48,26 @@ public class WebSecurity {
             login.permitAll(); // 모든 사용자 접근 가능
         });
 
-        http.logout(logout -> logout.permitAll()); // logout 처리
+        http.logout(logout -> logout.logoutSuccessUrl("/")); // 로그아웃 성공시 redirect
 
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService users() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("1234"))
-                .roles("DEV")
-                .build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("1234"))
-                .roles("USER", "ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+//    @Bean
+//    public UserDetailsService users() {
+//        log.info("PasswordEncode {}", passwordEncoder().encode("1234")); // 암호화처리 패스워드 확인
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(passwordEncoder().encode("1234"))
+//                .roles("DEV")
+//                .build();
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder().encode("1234"))
+//                .roles("USER", "ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 
     // password 인코더
     @Bean

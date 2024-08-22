@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
@@ -16,4 +17,7 @@ public interface AuthMapper {
 
     @Select("select roleNm from company.user_role as ur inner join role as r where ur.roleNo = r.roleNo and ur.userNo = #{userNo} ")
     List<RoleDto> roles(UserDto userDto);
+
+    @Select("select userNo, userNm, userPwd, userEnable from company.user where userNm = #{userNm} ")
+    Optional<UserDto> user(String userNm);
 }
