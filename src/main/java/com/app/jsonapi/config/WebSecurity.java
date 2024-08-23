@@ -18,8 +18,11 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(scrf -> scrf.disable());
+
         http.authorizeRequests(req -> {
             req.requestMatchers("/").permitAll(); // 모든 사용자 접근 가능
+            req.requestMatchers("/", "/sign").permitAll();
             req.requestMatchers("/admin").hasRole("ADMIN"); // ADMIN 사용자 접근 가능
             req.anyRequest().authenticated(); // 정의한 내역 제외 모두 접근 불가
         });
