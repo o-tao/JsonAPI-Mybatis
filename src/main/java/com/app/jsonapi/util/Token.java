@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.MacAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -27,11 +28,11 @@ public class Token {
     private int interval;
 
 
-    public String setToken() {
+    public String setToken(Authentication auth) {
 
         JwtBuilder token = Jwts.builder()
                 .header().add(getHeader()).and()
-                .claims(setClaims())
+                .claims(setClaims(auth))
                 .expiration(getDate()) // 만료 또는 종료시간
                 .issuedAt(Calendar.getInstance().getTime()) // 발급 또는 발행시간
                 .signWith(getSecretKey(), ALGORITHM);
@@ -56,11 +57,12 @@ public class Token {
     }
 
     // claims
-    private Map<String, Object> setClaims() {
+    private Map<String, Object> setClaims(Authentication auth) {
         Map<String, Object> claims = new HashMap<>();
 
         Map<String, Object> user = new HashMap<>();
-        user.put("name", "사용자"); // DB에서 받아오는 정보
+        user.put("userNm", auth.getName()); // DB에서 받아오는 정보
+        user.put("roles", auth.getAuthorities());
 
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자

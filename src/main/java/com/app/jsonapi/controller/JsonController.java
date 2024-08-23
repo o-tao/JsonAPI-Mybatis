@@ -2,12 +2,14 @@ package com.app.jsonapi.controller;
 
 import com.app.jsonapi.util.Token;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 public class JsonController {
 
@@ -21,8 +23,9 @@ public class JsonController {
     }
 
     @GetMapping("/token")
-    public String token() {
-        return token.setToken();
+    public String token(Authentication auth) {
+        log.info("Auth : {}", auth.getPrincipal());
+        return token.setToken(auth);
     }
 
     @GetMapping("/token/{token}")

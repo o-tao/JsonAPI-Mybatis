@@ -3,6 +3,8 @@ package com.app.jsonapi.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,12 +19,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurity {
 
     @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(scrf -> scrf.disable());
 
         http.authorizeRequests(req -> {
             req.requestMatchers("/").permitAll(); // 모든 사용자 접근 가능
-            req.requestMatchers("/", "/sign").permitAll();
+            req.requestMatchers("/", "/sign", "admin").permitAll();
             req.requestMatchers("/admin").hasRole("ADMIN"); // ADMIN 사용자 접근 가능
             req.anyRequest().authenticated(); // 정의한 내역 제외 모두 접근 불가
         });
