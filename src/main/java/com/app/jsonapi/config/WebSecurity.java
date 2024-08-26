@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Slf4j
 @EnableMethodSecurity
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class WebSecurity {
 
     @Bean
@@ -25,18 +25,23 @@ public class WebSecurity {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf(scrf -> scrf.disable());
+        http.cors(cors -> cors.disable());
 
         http.authorizeRequests(req -> {
-            req.requestMatchers("/").permitAll(); // 모든 사용자 접근 가능
+//            req.requestMatchers("/**").permitAll(); // 모든 사용자 모든 주소 접근 가능
+            req.requestMatchers("/", "/token").permitAll(); // 모든 사용자 접근 가능
             req.requestMatchers("/", "/sign", "admin").permitAll();
-            req.requestMatchers("/admin").hasRole("ADMIN"); // ADMIN 사용자 접근 가능
-            req.anyRequest().authenticated(); // 정의한 내역 제외 모두 접근 불가
+//            req.requestMatchers("/admin").hasRole("ADMIN"); // ADMIN 사용자 접근 가능
+//            req.anyRequest().authenticated(); // 정의한 내역 제외 모두 접근 불가
         });
 
 //        http.formLogin(Customizer.withDefaults()); // 로그인화면 접근제어
 
         // 로그인화면 접근제어 (컬럼명 변경하여 사용)
+//        http.formLogin(login -> login.disable());
+
         http.formLogin(login -> {
             login.loginPage("/login");
             login.defaultSuccessUrl("/admin", false); // 로그인 성공시 redirect -> false: 접속하고자 하는 URL / true: 기본정의한 URL

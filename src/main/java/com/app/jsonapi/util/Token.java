@@ -61,8 +61,9 @@ public class Token {
         Map<String, Object> claims = new HashMap<>();
 
         Map<String, Object> user = new HashMap<>();
-        user.put("userNm", auth.getName()); // DB에서 받아오는 정보
-        user.put("roles", auth.getAuthorities());
+        user.put("userNm", "TEST"); // token을 받아오기 위한 test 데이터
+//        user.put("userNm", auth.getName()); // DB에서 받아오는 정보
+//        user.put("roles", auth.getAuthorities());
 
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자
