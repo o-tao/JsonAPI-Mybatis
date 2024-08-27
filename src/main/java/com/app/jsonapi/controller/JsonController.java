@@ -1,11 +1,15 @@
 package com.app.jsonapi.controller;
 
+import com.app.jsonapi.dto.TokenDto;
+import com.app.jsonapi.dto.UserDto;
+import com.app.jsonapi.mapper.AuthMapper;
 import com.app.jsonapi.util.Token;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,11 +21,36 @@ public class JsonController {
 
     @Autowired
     private Token token;
+    @Autowired
+    private AuthMapper authMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/test")
     public Object test(Authentication authentication) {
 //        return authentication.getName(); // 사용자 이름 출력
         return authentication.getPrincipal(); // 사용자 정보 전체 출력
+    }
+
+    @PostMapping("/jsLogin")
+    public TokenDto jsLogin(@RequestParam Map<String, String> params) {
+        String userPwd = params.get("userPwd");
+        boolean state = false;
+        String jwt = null;
+
+        if (userPwd != null) {
+            UserDto userDto = authMapper.user(params.get("userNm")).orElseThrow();
+
+            if (passwordEncoder.matches(userPwd, userDto.getUserPwd())) {
+                log.info("동일한 값");
+                state = true;
+                jwt = token.setToken(userDto);
+            }
+        }
+        return TokenDto.builder()
+                .state(state)
+                .token(jwt)
+                .build();
     }
 
     @GetMapping("/token")

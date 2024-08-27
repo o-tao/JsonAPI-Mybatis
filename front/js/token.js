@@ -60,6 +60,35 @@ $(document).ready(()=> {
 
     });
 
+    $("form").on("submit", e => {
+        // form 태그가 가지고 있는 이벤트를 막는 부분
+        e.preventDefault();
+        let params = {
+            "userNm": $("#userNm").val(),
+            "userPwd": $("#userPwd").val()
+        }
+        console.log("form", params)
+
+                // "/jsLogin"
+                $.ajax({
+                    method: "POST",
+                    url: "http://localhost:80/jsLogin",
+                    data: params,
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader("Authorization", "");
+                        
+                    },
+                    success: function(res) {
+                        console.log(res);
+        
+                    },
+                    error: function(res) {
+                        console.log(res);
+        
+                    }
+            });
+    });
+
     localStorage.removeItem("token");
     // alert(localStorage.getItem("token"));
 

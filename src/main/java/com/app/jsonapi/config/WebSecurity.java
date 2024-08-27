@@ -44,7 +44,7 @@ public class WebSecurity {
 
         http.formLogin(login -> {
             login.loginPage("/login");
-            login.defaultSuccessUrl("/admin", false); // 로그인 성공시 redirect -> false: 접속하고자 하는 URL / true: 기본정의한 URL
+            login.defaultSuccessUrl("/", false); // 로그인 성공시 redirect -> false: 접속하고자 하는 URL / true: 기본정의한 URL
             login.failureUrl("/"); // 로그인 오류시 redirect
             login.usernameParameter("userNm");
             login.passwordParameter("userPwd");

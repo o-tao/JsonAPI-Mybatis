@@ -1,5 +1,6 @@
 package com.app.jsonapi.util;
 
+import com.app.jsonapi.dto.UserDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -41,6 +42,18 @@ public class Token {
         return token.compact();
     }
 
+    public String setToken(UserDto userDto) {
+
+        JwtBuilder token = Jwts.builder()
+                .header().add(getHeader()).and()
+                .claims(setClaims(userDto))
+                .expiration(getDate()) // 만료 또는 종료시간
+                .issuedAt(Calendar.getInstance().getTime()) // 발급 또는 발행시간
+                .signWith(getSecretKey(), ALGORITHM);
+
+        return token.compact();
+    }
+
     // header
     private Map<String, Object> getHeader() {
         Map<String, Object> header = new HashMap<>();
@@ -61,13 +74,28 @@ public class Token {
         Map<String, Object> claims = new HashMap<>();
 
         Map<String, Object> user = new HashMap<>();
-        user.put("userNm", "TEST"); // token을 받아오기 위한 test 데이터
+//        user.put("userNm", "TEST"); // token을 받아오기 위한 test 데이터
+        user.put("userNm", auth.getName()); // DB에서 받아오는 정보
+        user.put("roles", auth.getAuthorities());
+
+        claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
+        claims.put("subject", "user"); // 제목 또는 식별자
+        claims.put("audience", user); // 대상자 또는 사용자
+
+        return claims;
+    }
+
+    private Map<String, Object> setClaims(UserDto userDto) {
+        Map<String, Object> claims = new HashMap<>();
+
+//        Map<String, Object> user = new HashMap<>();
+//        user.put("userNm", "TEST"); // token을 받아오기 위한 test 데이터
 //        user.put("userNm", auth.getName()); // DB에서 받아오는 정보
 //        user.put("roles", auth.getAuthorities());
 
         claims.put("issuer", "JsonAPI"); // 발급자 또는 발급기관
         claims.put("subject", "user"); // 제목 또는 식별자
-        claims.put("audience", user); // 대상자 또는 사용자
+        claims.put("audience", userDto); // 대상자 또는 사용자
 
         return claims;
     }
