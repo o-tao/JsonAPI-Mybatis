@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"})
@@ -30,9 +32,20 @@ public class JsonController {
 
     @PostMapping("/getUser")
     public String getUser(HttpServletRequest request) {
+        return check(request);
+    }
+
+    private String check(HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
         log.info("Authorization: {}", authorization);
-        return "";
+
+        if (token.isValidToken(authorization)) {
+            Claims claims = token.getToken(authorization);
+            Map<String, String> user = (Map<String, String>) claims.get("audience");
+            log.info("claims: {}", user.get("userNm"));
+            return user.get("userNm");
+        }
+        return null;
     }
 
     @PostMapping("/token")
