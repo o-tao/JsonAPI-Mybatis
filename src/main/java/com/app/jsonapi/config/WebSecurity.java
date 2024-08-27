@@ -30,9 +30,9 @@ public class WebSecurity {
         http.cors(cors -> cors.disable());
 
         http.authorizeRequests(req -> {
-//            req.requestMatchers("/**").permitAll(); // 모든 사용자 모든 주소 접근 가능
-            req.requestMatchers("/", "/token").permitAll(); // 모든 사용자 접근 가능
-            req.requestMatchers("/", "/sign", "admin").permitAll();
+            req.requestMatchers("/**").permitAll(); // 모든 사용자 모든 주소 접근 가능
+//            req.requestMatchers("/", "/token").permitAll(); // 모든 사용자 접근 가능
+//            req.requestMatchers("/", "/sign", "admin").permitAll();
 //            req.requestMatchers("/admin").hasRole("ADMIN"); // ADMIN 사용자 접근 가능
 //            req.anyRequest().authenticated(); // 정의한 내역 제외 모두 접근 불가
         });

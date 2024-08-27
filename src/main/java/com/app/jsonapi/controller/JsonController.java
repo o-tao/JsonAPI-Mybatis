@@ -2,6 +2,7 @@ package com.app.jsonapi.controller;
 
 import com.app.jsonapi.util.Token;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,13 @@ public class JsonController {
     public String token(Authentication auth) {
 //        log.info("Auth : {}", auth.getPrincipal());
         return token.setToken(auth);
+    }
+
+    @PostMapping("/getUser")
+    public String getUser(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        log.info("Authorization: {}", authorization);
+        return "";
     }
 
     @PostMapping("/token")

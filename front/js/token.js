@@ -29,10 +29,10 @@ $(document).ready(()=> {
     const EVENT2 = (token) => {
         $.ajax({
             method: "POST",
-            url: "http://localhost:80/token",
-            data: {"token": token},
+            url: "http://localhost:80/getUser",
+            // data: {"token": token},
             beforeSend : function(xhr){
-                xhr.setRequestHeader("Authorization", "Token");
+                xhr.setRequestHeader("Authorization", token);
                 
             },
             success: function(res) {
