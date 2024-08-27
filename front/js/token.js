@@ -45,6 +45,27 @@ $(document).ready(()=> {
             }
         });
     }
+
+    const EVENT3 = (token) => {
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:80/admin",
+            // data: {"token": token},
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("Authorization", token);
+                
+            },
+            success: function(res) {
+                console.log(res);
+
+            },
+            error: function(res) {
+                console.log(res);
+
+            }
+        });
+    }
+
     $("#btn1").on("click", () => {
         EVENT1();
     });
@@ -58,6 +79,15 @@ $(document).ready(()=> {
         // alert("토큰이 존재합니다.")
         EVENT2(token);
 
+    });
+
+    $("#btn3").on("click", () => {
+        let token = localStorage.getItem("token");
+        if(token == null) {
+            alert("토큰이 없습니다.")
+            return;
+        }
+        EVENT3(token);
     });
 
     $("form").on("submit", e => {
@@ -75,11 +105,12 @@ $(document).ready(()=> {
                     url: "http://localhost:80/jsLogin",
                     data: params,
                     beforeSend : function(xhr){
-                        xhr.setRequestHeader("Authorization", "");
+                        // xhr.setRequestHeader("Authorization", "");
                         
                     },
                     success: function(res) {
                         console.log(res);
+                        localStorage.setItem("token", res.token);
         
                     },
                     error: function(res) {

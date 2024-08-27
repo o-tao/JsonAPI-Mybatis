@@ -11,16 +11,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 //@PreAuthorize("hasRole('DEV')") // 클래스 적용 (지정한 권한 접근 허용)
 @Slf4j
 @Controller
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"})
 public class ViewController {
 
     @Autowired
