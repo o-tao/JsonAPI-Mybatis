@@ -29,6 +29,6 @@ public interface AuthMapper {
     int signup(UserDto userDto);
 
     @Insert("insert into company.user_role values (#{userNo}, 3)")
-    int roleup(UserDto userDto);
+    int roleUp(UserDto userDto);
 
 }

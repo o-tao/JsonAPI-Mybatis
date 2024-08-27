@@ -79,7 +79,7 @@ public class ViewController {
                 log.info("User : {}", paramMap);
 
                 // 사용자 권한 등록
-                state = authMapper.roleup(userDto);
+                state = authMapper.roleUp(userDto);
                 if (state == 1) {
 //                    return "redirect:/login"; // 자동 로그인기능 사용 시 주석처리
 
