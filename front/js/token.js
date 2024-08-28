@@ -1,12 +1,12 @@
 $(document).ready(()=> {
     console.log("Token!!");
 
-    const EVENT1 = () => {
+    const EVENT1 = (token) => {
         $.ajax({
             method: "GET",
             url: "http://localhost:80/token",
             beforeSend : function(xhr){
-                xhr.setRequestHeader("Authorization", "Token");
+                xhr.setRequestHeader("Authorization", token);
             },
             success: function(res) {
                 console.log(res);
@@ -67,7 +67,12 @@ $(document).ready(()=> {
     }
 
     $("#btn1").on("click", () => {
-        EVENT1();
+        let token = localStorage.getItem("token");
+        if(token == null) {
+            alert("토큰이 없습니다.");
+            return;
+        }
+        EVENT1(token);
     });
 
     $("#btn2").on("click", () => {

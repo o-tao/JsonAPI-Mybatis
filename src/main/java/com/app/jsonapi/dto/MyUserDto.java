@@ -25,7 +25,16 @@ public class MyUserDto implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grant = new HashSet<>();
-        roles.forEach(role -> grant.add(new SimpleGrantedAuthority(role.getRoleNm())));
+        roles.forEach(role ->
+        {
+            if (role.getRoleNm().equals("ADMIN")) {
+                grant.add(new SimpleGrantedAuthority(user.getUserNm() + "님은 ROLE_" + role.getRoleNm() + "(관리자) 권한을 가지고 있습니다."));
+            }
+            if (role.getRoleNm().equals("USER")) {
+                grant.add(new SimpleGrantedAuthority(user.getUserNm() + "님은 ROLE_" + role.getRoleNm() + "(일반 사용자) 권한을 가지고 있습니다."));
+            }
+        });
+
         return grant;
     }
 
@@ -38,6 +47,16 @@ public class MyUserDto implements UserDetails {
     // name
     @Override
     public String getUsername() {
-        return user.getUserNm();
+        Set<GrantedAuthority> name = new HashSet<>();
+        roles.forEach(role -> {
+            if (role.getRoleNm().equals("ADMIN")) {
+                name.add(new SimpleGrantedAuthority(user.getUserNm() + " 관리자님 안녕하세요."));
+            }
+            if (role.getRoleNm().equals("USER")) {
+                name.add(new SimpleGrantedAuthority(user.getUserNm() + " 님 안녕하세요."));
+            }
+        });
+
+        return name.toString();
     }
 }

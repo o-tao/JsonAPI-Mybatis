@@ -38,6 +38,8 @@
     </div>
 </div>
 <div class="container mt-3">
+    <h1> Spring Web Application</h1>
+    <br>
     <th:block sec:authorize="isAuthenticated()">
         <h1 sec:authentication="name">이름</h1>
         <h2 sec:authentication="principal.authorities">권한</h2>
